@@ -37,6 +37,16 @@ api.get("/boards", (req, res, next) => {
     .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
 })
 
+// PAGENATE
+
+api.get("/boards", (req, res, next) => {
+  const limit = Number(pathOr(3, ["query", "limit"], req))
+  const paginate = pathOr(null, ["query", "start_key"], req)
+  listBoards(limit, paginate)
+    .then(boards => res.status(200).send(boards))
+    .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
+})
+
 api.post("/boards", (req, res, next) => {
   const newBoard = propOr({}, "body", req)
 
